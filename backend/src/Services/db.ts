@@ -8,13 +8,13 @@ declare global {
 
 
 BigInt.prototype.toJSON = function (): string {
-	return this.toString();
+    return this.toString();
 };
 
 const prisma = new PrismaClient();
 
 process.on("exit", () => {
-	prisma.$disconnect();
+    prisma.$disconnect();
 });
 
 export default prisma;
