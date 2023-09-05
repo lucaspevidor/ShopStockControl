@@ -24,6 +24,6 @@ model products {
   name                             String  @db.VarChar(100)
   cost_price                       Decimal @db.Decimal(9, 2)
   sales_price                      Decimal @db.Decimal(9, 2)
-  packs_packs_pack_idToproducts    packs[] @relation("pack_idToproducts")
-  packs_packs_product_idToproducts packs[] @relation("product_idToproducts")
+  pack_idToproducts                packs[] @relation("pack_idToproducts")
+  product_idToproducts             packs[] @relation("product_idToproducts")
 }
