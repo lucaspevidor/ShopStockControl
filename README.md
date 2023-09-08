@@ -14,6 +14,7 @@ Sistema de controle de estoque
 1. Clone o repositório
     ```bash
     git clone https://github.com/lucaspevidor/ShopStockControl.git
+    cd ShopStockControl
     ```
 
 1. Navegue até o diretório `backend` e instale as dependências
@@ -27,12 +28,16 @@ Sistema de controle de estoque
     DATABASE_URL="mysql://<user>:<password>@<endereço_mysql>:<porta>/<nome_db>"
     ```
 
+1. Gere os arquivos do PrismaClient com o comando:
+    ```bash
+    npx prisma generate
+    ```
+
 ## Executando o servidor
 
 Para iniciar o servidor, execute os comandos abaixo:
 
 ```bash
-cd backend
 npm run dev
 ```
 
@@ -58,6 +63,7 @@ O servidor será iniciado na porta 3000
 1. Clone o repositório
     ```bash
     git clone https://github.com/lucaspevidor/ShopStockControl.git
+    cd ShopStockControl
     ```
 
 1. Navegue até o diretório `frontend` e instale as dependências
@@ -76,7 +82,6 @@ O servidor será iniciado na porta 3000
 Para iniciar o servidor, execute os comandos abaixo:
 
 ```bash
-cd frontend
 npm run dev
 ```
 
