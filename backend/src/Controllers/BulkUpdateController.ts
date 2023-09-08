@@ -73,7 +73,6 @@ class BulkUpdateController {
                     });
 
                     if (Math.abs(sum - item.new_price) >= 0.001) {
-                        console.log({ sum, p: item.new_price });
                         item.errors.push("A soma dos preços de venda dos produtos neste pacote é diferente do novo valor do pacote");
                     }
                 }
