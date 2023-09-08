@@ -19,7 +19,7 @@ class BulkUpdateController {
             const products = await prisma.products.findMany({
                 where: { code: { in: validCodes } },
                 include: { product_idToproducts: true }
-            });
+            });            
             const packs = await prisma.packs.findMany({
                 where: { pack_id: { in: validCodes } } ,                    
             });
@@ -54,7 +54,7 @@ class BulkUpdateController {
                 ) {
                     item.product.product_idToproducts.forEach(pack => {
                         if (!validCodes.includes(Number(pack.pack_id))) {
-                            item.errors.push(`Pacote ${pack.pack_id} não incluido no CSV`);
+                            item.errors.push(`Pacote ${pack.pack_id} não incluído no CSV`);
                         }
                     });
                 }
@@ -66,37 +66,33 @@ class BulkUpdateController {
                     item.packs?.forEach(product => {
                         const productInCSV = reqItems.items?.find(p => p.code === Number(product.product_id));                  
                         if (!productInCSV) {
-                            item.errors.push(`Produto ${product.product_id} não incluido no CSV`);
+                            item.errors.push(`Produto ${product.product_id} não incluído no CSV`);
                         } else {
                             sum += productInCSV.new_price * Number(product.qty);
                         }
                     });
 
-                    if (sum !== item.new_price) {
+                    if (Math.abs(sum - item.new_price) >= 0.001) {
+                        console.log({ sum, p: item.new_price });
                         item.errors.push("A soma dos preços de venda dos produtos neste pacote é diferente do novo valor do pacote");
                     }
                 }
-
+                
+                // Bad request flag
                 if (item.errors.length > 0) { req.body.badRequest = true; }
             });            
 
         } catch (e) {
             return ThrowInternalServerError(res, e);
         }        
-        
-        if (req.body.badRequest) {
-            return res.status(400).json(reqItems.items);
+    
+        if (req.method === "PUT") {            
+            next();
         }
-        else 
+        else
         {
-            if (req.method === "PUT") {            
-                next();
-            }
-            else
-            {
-                return res.json(reqItems.items);
-            }            
-        }
+            return res.json({ items: reqItems.items, badRequest: req.body.badRequest });
+        }                    
 
     }
 
@@ -116,7 +112,16 @@ class BulkUpdateController {
             for (const product of productsToUpdate) {
                 await prisma.products.update(product);
             }
-            return res.json({ message: `${productsToUpdate.length} products have been updated` });
+            if (productsToUpdate.length === 0) {
+                return res.json({ message: "Nenhum produto foi atualizado" });
+            }
+            else if (productsToUpdate.length === 1) {
+                return res.json({ message: "1 produto foi atualizado" });                
+            }
+            else {
+                return res.json({ message: `${productsToUpdate.length} produtos foram atualizados` });
+            }
+
         } catch (e) {
             return ThrowInternalServerError(res, e);
         }

@@ -35,6 +35,10 @@ export function CSVParseToRows(req: Request<unknown, unknown, CSVRequestType>, r
     const rows = rawCSV.split("\n");
     const rowCols: string[][] = [];
 
+    if (rows.length < 2) {
+        return res.status(400).json({ error: "Conteúdo do arquivo CSV inválido" });
+    }
+
     for (let i = 0; i < rows.length; i++) {
         const splittedRow = rows[i].split(",");
         if (splittedRow.length < 2) {
